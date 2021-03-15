@@ -11,7 +11,6 @@ const cartPageCartWrapper = document.querySelector('.cart-page-cart-wrapper');
 //cart-----------
 let cart = [];
 //buttons
-let buttonsDOM = [];
 // getting the products
 // class Products{
 //     async getProducts() {
@@ -46,6 +45,7 @@ class Products{
         const itemTwoPrice = document.querySelector(".itemTwoPrice").innerText;
         const itemThreePrice = document.querySelector(".itemThreePrice").innerText;
         const itemFourPrice = document.querySelector(".itemFourPrice").innerText;
+        const quantity = document.querySelector('.quantityNumber').innerText;
         const id = document.querySelector(".ProId").innerText;
         if(itemThreePrice == ''){
             itemThreePrice.innerText ="0";
@@ -53,8 +53,7 @@ class Products{
         if(itemFourPrice == ''){
             itemFourPrice.innerText ="0";
         }
-        console.log(itemFourPrice);
-        let products = {id, modalTitle, itemOnePrice,itemTwoPrice, itemThreePrice,itemFourPrice};
+        let products = {id, modalTitle, itemOnePrice,itemTwoPrice, itemThreePrice,itemFourPrice,quantity};
         return products;
     }
 
@@ -66,30 +65,24 @@ class Products{
 class UI {
     
 
-    // addTocart() {
-    //     // const buttons = [...document.querySelectorAll(".addTocartBtn")];
-    //     // buttonsDOM = buttons;
-    //     const addToCartBtn = document.querySelector('.addToCartBtn');
-    //     addToCartBtn.addEventListener("click", () => {
-    //         alert("working fine!!")
-    //             //get product from prducts
-    //             let cartItem = {...Storage.getProduct(id), amount: 1 };
-    //             // add product to the cart
-    //             cart = [...cart, cartItem];
-    //             //save cart in local storage
-    //             Storage.saveCart(cart);
-    //             //set cart values
-    //             this.setCartValues(cart);
-    //             //display cart item
-    //             this.addCartItem(cartItem);
-    //             //display cart item in cart page
-    //             // this.addCartItemInCartPage(cartItem);
-    //             // show the cart
-    //         });
-    
+    addTocart() {
+
+       //get product from prducts
+      let cartItem = {...Storage.getProduct(), amount: 1 };
+       // add product to the cart
+       cart = [...cart, cartItem]; 
+       console.log(cart.length)
+       //save cart in local storage
+       Storage.saveCart(cart);
+       //set cart values
+    //    this.setCartValues(cart);
+    //    //display cart item
+    //    this.addCartItem(cartItem);
+       //display cart item in cart page
+       // this.addCartItemInCartPage(cartItem);
+       // show the cart  
         
-        
-    // }
+    }
 
     // setCartValues(cart) {
     //     let tempTotal = 0.00;
@@ -101,83 +94,99 @@ class UI {
     //     cartTotalAmount.innerHTML =`$${parseFloat(tempTotal.toFixed(2))}`;
     //     cartItemNumber.innerHTML = itemsTotal;  
     // }
-    // addCartItem(item) {
-    //     const div = document.createElement('div');
-    //     div.classList.add('single-product-cart');
-    //     div.innerHTML = `
-    //             <div class="cart-product-img">
-    //                 <img src="${item.image}" alt="1.jpg">
-    //             </div>
-    //             <div class="cart-product-details-home">
-    //                 <p>Ultra Wireless S50 Headphones S50 with Bluetooth</p>
-    //                 <div class="cart-midle-home">
-    //                  <h6>${item.amount} x $${item.price}</h6>
-    //                   <div class="cart-midle-right-home">
-    //                    <ul>
-    //                       <li><button><i class="fa fa-angle-left" data-id="${item.id}"></i></button></li>
-    //                       <li><b>${item.amount}</b></li>
-    //                       <li><button><i class="fa fa-angle-right" data-id="${item.id}"></i></button></li>
-    //                    </ul>
-    //                 </div>
-    //                 </div>
-                    
-    //             </div>
-    //             <div class="cart-item-del-btn-home">
-    //                 <b class="fa fa-close" data-id="${item.id}"></b>
-    //             </div>`;
-    //     cartBoxHome.appendChild(div);
-    // }
-    // setupAPP() {
-    //     cart = Storage.getCart();
-    //     this.setCartValues(cart);
-    //     this.populateCart(cart);
-        
-    // }
-    // populateCart(cart) {
-    //     cart.forEach(item => this.addCartItem(item));
-    // }
+    addCartItem(item) {
 
-    // cartLogic() {
-    //     //clear cart button
-    //     clearCartBtn.addEventListener("click", () => {
-    //         this.clearCart();
+        for(let i=0; i<item.length;i++){
+            const div = document.createElement('div');
+            div.classList.add('single-product-cart');
+    
+            div.innerHTML = `
+                    <div class="cart-product-img">
+                        <img src="images/icon/slide-icon4.png" alt="1.jpg">
+                    </div>
+                    <div class="cart-product-details-home">
+                        <p>${item[i].modalTitle}</p>
+                        <div class="cart-midle-home">
+                         
+                          <div class="cart-midle-right-home">
+                          <ul class="service-list service-list-cart">
+                           <li >Dry Wash- ${item[i].itemOnePrice}</li>
+                           <li >Steam Wash- ${item[i].itemTwoPrice}</li>
+                           <li >Dry iron -${item[i].itemThreePrice}</li>
+                           <li > Steam Iron -${item[i].itemFourPrice}</li>
+                          </ul>
+                           <ul>
+                              <li><button><i class="fa fa-angle-left" data-id="${item.id}"></i></button></li>
+                              <li><b>${item[i].quantity}</b></li>
+                              <li><button><i class="fa fa-angle-right" data-id="${item.id}"></i></button></li>
+                           </ul>
+                        </div>
+                        </div>
+                        
+                    </div>
+                    <div class="cart-item-del-btn-home">
+                        <b class="fa fa-close" data-id="${item.id}"></b>
+                    </div>`;
+            cartBoxHome.appendChild(div);
+
+        }
+       
+    }
+    setupAPP() {
+        cart = Storage.getCart();
+        console.log(cart[0].quantity);
+
+        //display cart item into cart ------
+           this.addCartItem(cart);
+        // this.setCartValues(cart);
+        // this.populateCart(cart);
+        
+    }
+    populateCart(cart) {
+        cart.forEach(item => this.addCartItem(item));
+    }
+
+    cartLogic() {
+        //clear cart button
+        clearCartBtn.addEventListener("click", () => {
+            this.clearCart();
              
-    //     });
-    //     //cart functionality-home page
-    //     cartBoxHome.addEventListener("click", event => {
-    //         if (event.target.classList.contains('fa-close')) {
-    //             let removeItem = event.target;
-    //             let id = removeItem.dataset.id;
-    //             cartBoxHome.removeChild(removeItem.parentElement.parentElement);
-    //             this.removeItem(id);
+        });
+        //cart functionality-home page
+        cartBoxHome.addEventListener("click", event => {
+            if (event.target.classList.contains('fa-close')) {
+                let removeItem = event.target;
+                let id = removeItem.dataset.id;
+                cartBoxHome.removeChild(removeItem.parentElement.parentElement);
+                this.removeItem(id);
                 
-    //         }
-    //         else if (event.target.classList.contains("fa-angle-right")) {
-    //             let addAmount = event.target; 
-    //             let id = addAmount.dataset.id;
-    //             let tempItem = cart.find(item => item.id === id);
-    //             tempItem.amount = tempItem.amount + 1;
-    //             Storage.saveCart(cart);
-    //             this.setCartValues(cart);
-    //             addAmount.parentElement.parentElement.previousSibling.children.innerText = tempItem.amount;
-    //         }
-    //         else if(event.target.classList.contains("fa-angle-left")) {
-    //             let lowerAmount = event.target;
-    //             let id = lowerAmount.dataset.id;
-    //             let tempItem = cart.find(item => item.id === id);
-    //             tempItem.amount = tempItem.amount - 1;
-    //             if (tempItem.amount > 0) {
-    //             Storage.saveCart(cart);
-    //             this.setCartValues(cart);
-    //             lowerAmount.parentElement.parentElement.nextSibling.children.innerText = tempItem.amount; 
-    //             }
-    //             else {
-    //                 cartBoxHome.removeChild(lowerAmount.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement);
-    //                 this.removeItem(id);
-    //             }
-    //         }   
-    //     });
-    //     }
+            }
+            else if (event.target.classList.contains("fa-angle-right")) {
+                let addAmount = event.target; 
+                let id = addAmount.dataset.id;
+                let tempItem = cart.find(item => item.id === id);
+                tempItem.amount = tempItem.amount + 1;
+                Storage.saveCart(cart);
+                this.setCartValues(cart);
+                addAmount.parentElement.parentElement.previousSibling.children.innerText = tempItem.amount;
+            }
+            else if(event.target.classList.contains("fa-angle-left")) {
+                let lowerAmount = event.target;
+                let id = lowerAmount.dataset.id;
+                let tempItem = cart.find(item => item.id === id);
+                tempItem.amount = tempItem.amount - 1;
+                if (tempItem.amount > 0) {
+                Storage.saveCart(cart);
+                this.setCartValues(cart);
+                lowerAmount.parentElement.parentElement.nextSibling.children.innerText = tempItem.amount; 
+                }
+                else {
+                    cartBoxHome.removeChild(lowerAmount.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement);
+                    this.removeItem(id);
+                }
+            }   
+        });
+        }
         
     
     // clearCart(){
@@ -188,19 +197,19 @@ class UI {
     //     }
         
     //     }
-    // removeItem(id) {
-    //     cart = cart.filter(item => item.id !== id); 
-    //     this.setCartValues(cart);
-    //     Storage.saveCart(cart);
-    //     let button = this.getSingleButton(id);
-    //     button.style.color = "#f4f4f4";
-    //     button.style.opacity = "1";
-    //     button.disabled = false;
+    removeItem(id){
+        cart = cart.filter(item => item.id !== id); 
+        this.setCartValues(cart);
+        Storage.saveCart(cart);
+        let button = this.getSingleButton(id);
+        button.style.color = "#f4f4f4";
+        button.style.opacity = "1";
+        button.disabled = false;
 
-    //     }
-    // getSingleButton(id) {
-    //     return buttonsDOM.find(button => button.dataset.id === id);
-    // }
+        }
+    getSingleButton(id) {
+        return buttonsDOM.find(button => button.dataset.id === id);
+    }
 
     
 }
@@ -209,9 +218,9 @@ class Storage{
     static saveProducts(products) {
         localStorage.setItem("products", JSON.stringify(products));
     }
-    static getProduct(id) {
-        let products = JSON.parse(localStorage.getItem('products'));
-        return products.find(product => product.id === id);
+    static getProduct() {
+        let product = JSON.parse(localStorage.getItem('products'));
+        return product;
     }
     static saveCart(cart) {
         localStorage.setItem("cart", JSON.stringify(cart));
@@ -224,15 +233,10 @@ class Storage{
 }
 
 document.addEventListener("DOMContentLoaded", ()=> {
-   
-
     const ui = new UI();
-    const products = new Products();
+    // add product to the cart
     //setup application--------------
-    
-    // ui.setupAPP();
-    
-  
+    ui.setupAPP();
     
     // .then(() => {
     //     alert("loaded");
@@ -242,11 +246,10 @@ document.addEventListener("DOMContentLoaded", ()=> {
     
 });
 document.querySelector('.addToCartBtn').addEventListener('click',()=>{
-    
-    alert();
     const ui = new UI();
     const products = new Products();
     // get all products
-    Storage.saveProducts(products);
-    console.log(products.getProducts())
+    const product = products.getProducts();
+    Storage.saveProducts(product);
+    ui.addTocart();
 })
